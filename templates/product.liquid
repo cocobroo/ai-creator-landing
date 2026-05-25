@@ -159,6 +159,7 @@
 
     {% form 'product', product %}
       <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <input type="hidden" name="return_to" value="/checkout">
       <button type="submit" class="prod__btn" name="add">
         Comprar ahora &mdash; {{ product.price | money_without_trailing_zeros }} &rarr;
       </button>
