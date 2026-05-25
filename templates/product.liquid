@@ -1,0 +1,174 @@
+{% layout 'product' %}
+
+<style>
+  .prod {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .prod__card {
+    background: oklch(10% 0 0);
+    border: 1px solid oklch(26% 0 0);
+    border-radius: 4px;
+    padding: 40px 32px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+  .prod__tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: oklch(73% 0.22 145);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .prod__title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .prod__sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: oklch(50% 0 0);
+    margin-bottom: 28px;
+    letter-spacing: 0.08em;
+  }
+  .prod__price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid oklch(17% 0 0);
+  }
+  .prod__price {
+    font-family: 'DM Mono', monospace;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .prod__compare {
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    color: oklch(50% 0 0);
+    text-decoration: line-through;
+  }
+  .prod__badge {
+    background: oklch(73% 0.22 145);
+    color: oklch(7% 0 0);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+  .prod__list {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .prod__list li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: oklch(75% 0 0);
+    line-height: 1.4;
+  }
+  .prod__list li::before {
+    content: '→';
+    color: oklch(73% 0.22 145);
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+  .prod__btn {
+    display: block;
+    width: 100%;
+    background: oklch(73% 0.22 145);
+    color: oklch(7% 0 0);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 24px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.15s;
+    margin-bottom: 12px;
+  }
+  .prod__btn:hover { filter: brightness(1.1); }
+  .prod__trust {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: oklch(50% 0 0);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+  .prod__back {
+    display: block;
+    margin-top: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: oklch(40% 0 0);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .prod__back:hover { color: oklch(73% 0.22 145); }
+</style>
+
+<div class="prod">
+  <div class="prod__card">
+    <span class="prod__tag">matupani &mdash; compra segura</span>
+    <h1 class="prod__title">{{ product.title }}</h1>
+    <p class="prod__sub">Gu&iacute;a completa + comunidad Telegram</p>
+
+    <div class="prod__price-row">
+      {% if product.compare_at_price_max > product.price %}
+        <span class="prod__compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+      {% endif %}
+      <span class="prod__price">{{ product.price | money_without_trailing_zeros }}</span>
+      {% if product.compare_at_price_max > product.price %}
+        <span class="prod__badge">&minus;85%</span>
+      {% endif %}
+    </div>
+
+    <ul class="prod__list">
+      <li>Gu&iacute;a completa AI Creator System (PDF)</li>
+      <li>+10 herramientas esenciales explicadas</li>
+      <li>Prompts secretos para im&aacute;genes ultra-realistas</li>
+      <li>Sistema: imagen &rarr; video &rarr; voz</li>
+      <li>Tr&aacute;fico org&aacute;nico gratuito + monetizaci&oacute;n</li>
+      <li>Acceso al grupo de Telegram exclusivo</li>
+      <li>3 Claude Skills listos para usar</li>
+      <li>Acceso de por vida + actualizaciones</li>
+    </ul>
+
+    {% form 'product', product %}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" class="prod__btn" name="add">
+        Comprar ahora &mdash; {{ product.price | money_without_trailing_zeros }} &rarr;
+      </button>
+    {% endform %}
+
+    <p class="prod__trust">
+      Garant&iacute;a 7 d&iacute;as sin preguntas &nbsp;&middot;&nbsp; Acceso inmediato<br>
+      Pago seguro procesado por Shopify
+    </p>
+
+    <a href="/" class="prod__back">&larr; volver</a>
+  </div>
+</div>
