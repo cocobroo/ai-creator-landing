@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator System &mdash; matupani | $7 USD</title>
+  <meta name="description" content="Crea un personaje IA tan real que nadie sabe si existe. El sistema completo para crear contenido faceless, conseguir tráfico gratuito y monetizar. $7 USD lanzamiento.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  {{ content_for_header }}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:         oklch(6% 0 0);
+      --bg-card:    oklch(10% 0 0);
+      --text:       oklch(96% 0 0);
+      --muted:      oklch(50% 0 0);
+      --subtle:     oklch(27% 0 0);
+      --accent:     oklch(73% 0.22 145);
+      --accent-dim: oklch(73% 0.22 145 / 0.14);
+      --border:     oklch(17% 0 0);
+      --border-mid: oklch(26% 0 0);
+
+      --display: 'Bebas Neue', 'Arial Black', sans-serif;
+      --mono:    'DM Mono', monospace;
+      --body:    'DM Sans', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 70px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    .ticker {
+      background: var(--accent);
+      color: oklch(7% 0 0);
+      height: 32px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .ticker__track {
+      display: flex;
+      white-space: nowrap;
+      animation: tick 40s linear infinite;
+    }
+    .ticker__item { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 0 2rem; }
+    .ticker__dot { padding: 0 0.4rem; opacity: 0.5; font-size: 10px; }
+    @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    .wrap { padding: 0 20px; max-width: 600px; margin: 0 auto; }
+    section { padding: 64px 0; }
+    .split { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: block; }
+
+    .heading { font-family: var(--display); font-size: 48px; line-height: 1; text-transform: uppercase; margin-bottom: 20px; }
+    .heading em { color: var(--accent); font-style: italic; }
+
+    .hero {
+      padding: 56px 0 64px;
+      text-align: center;
+      position: relative;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 10%, var(--bg) 85%);
+      pointer-events: none;
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero__pill { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); padding: 4px 12px; margin-bottom: 28px; }
+    .hero__pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+    .hero__h1 { font-family: var(--display); font-size: 64px; line-height: 0.92; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.01em; }
+    .hero__h1 em { color: var(--accent); font-style: italic; }
+
+    .hero__sub { font-size: 16px; line-height: 1.6; color: oklch(70% 0 0); max-width: 420px; margin: 0 auto 32px; }
+
+    .hero__price { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+    .p-old { font-family: var(--mono); font-size: 18px; color: var(--muted); text-decoration: line-through; }
+    .p-new { font-family: var(--mono); font-size: 42px; font-weight: 300; }
+    .p-tag { background: var(--accent); color: oklch(7% 0 0); font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; }
+
+    .btn { display: block; width: 100%; max-width: 380px; margin: 0 auto; background: var(--accent); color: oklch(7% 0 0); font-family: var(--display); font-size: 24px; letter-spacing: 0.1em; text-transform: uppercase; padding: 17px 24px; text-align: center; cursor: pointer; border: none; transition: filter 0.15s; }
+    .btn:hover { filter: brightness(1.1); }
+
+    .hero__trust { display: block; margin-top: 12px; font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+
+    .outcomes { background: var(--bg-card); }
+    .outcomes__intro { font-size: 17px; line-height: 1.65; color: oklch(72% 0 0); margin-bottom: 36px; }
+    .outcomes__intro strong { color: var(--text); }
+
+    .checklist { list-style: none; border-top: 1px solid var(--border); }
+    .checklist__item { display: flex; gap: 16px; align-items: flex-start; padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .checklist__icon { color: var(--accent); font-family: var(--mono); font-size: 14px; flex-shrink: 0; padding-top: 2px; line-height: 1.5; }
+    .checklist__text { font-size: 15px; line-height: 1.5; color: oklch(82% 0 0); }
+    .checklist__text strong { color: var(--text); }
+
+    .bonus { padding: 64px 0; }
+    .bonus__cards { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+    .bonus__card { border: 1px solid var(--border-mid); padding: 24px 20px; display: flex; gap: 16px; align-items: flex-start; }
+    .bonus__card--highlight { border-color: var(--accent); background: var(--accent-dim); }
+    .bonus__num { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; flex-shrink: 0; padding-top: 3px; }
+    .bonus__title { font-family: var(--display); font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 5px; line-height: 1.2; }
+    .bonus__desc { font-size: 13px; color: oklch(65% 0 0); line-height: 1.55; }
+
+    .pricing { background: var(--bg-card); }
+    .pricing__card { border: 1px solid var(--border-mid); padding: 36px 24px; position: relative; margin-top: 36px; }
+    .pricing__badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: oklch(7% 0 0); font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 16px; white-space: nowrap; }
+    .pricing__name { font-family: var(--display); font-size: 30px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 3px; }
+    .pricing__sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 24px; letter-spacing: 0.08em; }
+    .pricing__price { display: flex; align-items: baseline; gap: 12px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .pricing__amount { font-family: var(--mono); font-size: 52px; font-weight: 300; line-height: 1; }
+    .pricing__meta { display: flex; flex-direction: column; gap: 3px; }
+    .pricing__was { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: line-through; }
+    .pricing__usd { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.08em; }
+    .pricing__list { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; }
+    .pricing__list li { display: flex; gap: 10px; font-size: 14px; color: oklch(78% 0 0); line-height: 1.4; }
+    .pricing__list li::before { content: '\2192'; color: var(--accent); font-family: var(--mono); flex-shrink: 0; }
+    .pricing__fine { text-align: center; font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; line-height: 1.6; margin-top: 12px; }
+
+    .faq__list { margin-top: 32px; border-top: 1px solid var(--border); }
+    .faq__item { border-bottom: 1px solid var(--border); }
+    .faq__q { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; font-size: 15px; font-weight: 500; list-style: none; gap: 16px; user-select: none; }
+    .faq__q::-webkit-details-marker { display: none; }
+    .faq__q::after { content: '+'; font-family: var(--mono); font-size: 20px; color: var(--muted); flex-shrink: 0; transition: transform 0.18s; line-height: 1; }
+    details[open] .faq__q::after { transform: rotate(45deg); }
+    .faq__a { padding: 0 0 20px; font-size: 14px; color: oklch(63% 0 0); line-height: 1.7; }
+
+    .fcta { text-align: center; padding: 80px 0 88px; }
+    .fcta__h { font-family: var(--display); font-size: 64px; line-height: 0.95; text-transform: uppercase; margin-bottom: 16px; }
+    .fcta__h em { color: var(--accent); font-style: italic; }
+    .fcta__sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 28px; }
+
+    footer { border-top: 1px solid var(--border); padding: 24px 0; }
+    .footer__row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .footer__brand { font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+    .footer__copy { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+    .sticky { position: fixed; bottom: 0; left: 0; right: 0; background: oklch(11% 0 0); border-top: 1px solid var(--border-mid); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; z-index: 100; transform: translateY(100%); transition: transform 0.28s ease; }
+    .sticky.on { transform: translateY(0); }
+    .sticky__text { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .sticky__text strong { color: var(--text); }
+    .sticky__btn { display: inline-block; background: var(--accent); color: oklch(7% 0 0); font-family: var(--display); font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; padding: 9px 22px; white-space: nowrap; flex-shrink: 0; }
+
+    @media (min-width: 600px) {
+      section { padding: 80px 0; }
+      .hero { padding: 80px 0 88px; }
+      .hero__h1 { font-size: 96px; }
+      .hero__sub { font-size: 18px; }
+      .heading { font-size: 60px; }
+      .btn { font-size: 22px; }
+      .bonus__cards { flex-direction: row; }
+      .bonus__card { flex: 1; }
+      .fcta__h { font-size: 88px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <span class="ticker__item">Precio de lanzamiento $7 USD</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Acceso inmediato al comprar</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Garant&iacute;a 7 d&iacute;as sin preguntas</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Sube a $47 sin fecha exacta</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">+10 herramientas esenciales</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Precio de lanzamiento $7 USD</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Acceso inmediato al comprar</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Garant&iacute;a 7 d&iacute;as sin preguntas</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">Sube a $47 sin fecha exacta</span>
+    <span class="ticker__dot">&middot;</span>
+    <span class="ticker__item">+10 herramientas esenciales</span>
+    <span class="ticker__dot">&middot;</span>
+  </div>
+</div>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="hero__pill">matupani &mdash; AI Creator System</p>
+    <h1 class="hero__h1">
+      Crea un<br>
+      personaje IA<br>
+      <em>tan real que</em><br>
+      nadie lo sabe
+    </h1>
+    <p class="hero__sub">
+      El sistema completo para crear contenido faceless con IA, conseguir tr&aacute;fico gratuito y monetizar &mdash; sin mostrar tu cara.
+    </p>
+    <div class="hero__price">
+      <span class="p-old">$47 USD</span>
+      <span class="p-new">$7 USD</span>
+      <span class="p-tag">&minus;85%</span>
+    </div>
+    <a href="#comprar" class="btn">Quiero el sistema &rarr;</a>
+    <span class="hero__trust">Acceso inmediato &nbsp;&middot;&nbsp; Garant&iacute;a 7 d&iacute;as &nbsp;&middot;&nbsp; Pago &uacute;nico</span>
+  </div>
+</section>
+
+<hr class="split">
+
+<section class="outcomes">
+  <div class="wrap">
+    <span class="tag">// lo que vas a aprender</span>
+    <h2 class="heading">Todo lo que<br>est&aacute; <em>adentro</em></h2>
+    <p class="outcomes__intro">
+      No es otro tutorial de una sola herramienta. Es el sistema completo que uso yo para crear contenido que <strong>la gente no sabe si es IA o una persona real.</strong>
+    </p>
+    <ul class="checklist">
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>C&oacute;mo crear tu primer personaje IA hiper-realista</strong> &mdash; con m&aacute;s de 10 herramientas esenciales que van a cambiar c&oacute;mo creates contenido</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>El prompt secreto para im&aacute;genes imposibles de distinguir de una foto real</strong> &mdash; el skill exacto que yo uso y que no ense&ntilde;a nadie</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>Qu&eacute; modelos de IA dan calidad real</strong> y cu&aacute;les son p&eacute;rdida de tiempo &mdash; para que no gastes horas en herramientas equivocadas</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>C&oacute;mo animar tu personaje y crear videos con &eacute;l</strong> &mdash; de imagen est&aacute;tica a video cinematogr&aacute;fico en minutos</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>C&oacute;mo darle voz a tu personaje</strong> &mdash; para que hable, narre y tenga presencia sin que salgas t&uacute;</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>Tr&aacute;fico org&aacute;nico 100% gratuito</strong> para tus redes &mdash; c&oacute;mo conseguir que la gente llegue a tu contenido sin pagar un peso</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>C&oacute;mo monetizar el contenido de IA que creas</strong> &mdash; las formas concretas de generar ingresos con esto si lo ejecutas bien</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>Acceso al grupo de WhatsApp de la comunidad</strong> &mdash; donde vas a poder preguntar, compartir y crecer con otros creadores del sistema</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text"><strong>El prompt de Claude que te convierte en director creativo de IA</strong> &mdash; un skill completo para que siempre generes el mejor contenido con contexto real</p>
+      </li>
+      <li class="checklist__item">
+        <span class="checklist__icon">&#10003;</span>
+        <p class="checklist__text" style="color:var(--muted);font-style:italic;">Y bastante m&aacute;s que no puedo contar aqu&iacute;&hellip;</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<hr class="split">
+
+<section class="bonus">
+  <div class="wrap">
+    <span class="tag">// incluido en el sistema</span>
+    <h2 class="heading">Dos cosas que<br>nadie m&aacute;s da</h2>
+    <div class="bonus__cards">
+      <div class="bonus__card bonus__card--highlight">
+        <span class="bonus__num">01</span>
+        <div>
+          <p class="bonus__title">Grupo de WhatsApp exclusivo</p>
+          <p class="bonus__desc">Acceso directo a la comunidad. Preguntas, modelos, herramientas nuevas, actualizaciones &mdash; todo en un solo lugar.</p>
+        </div>
+      </div>
+      <div class="bonus__card bonus__card--highlight">
+        <span class="bonus__num">02</span>
+        <div>
+          <p class="bonus__title">El prompt de Claude creator</p>
+          <p class="bonus__desc">Un skill completo para que tu Claude siempre tenga el contexto correcto y te ayude a crear el mejor contenido de IA posible.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="split">
+
+<section class="pricing" id="comprar">
+  <div class="wrap">
+    <span class="tag">// precio de lanzamiento</span>
+    <h2 class="heading">Acceso <em>completo</em></h2>
+    <div class="pricing__card">
+      <span class="pricing__badge">Lanzamiento &mdash; precio &uacute;nico</span>
+      <p class="pricing__name">AI Creator System</p>
+      <p class="pricing__sub">by matupani &nbsp;&middot;&nbsp; Gu&iacute;a completa + comunidad</p>
+      <div class="pricing__price">
+        <span class="pricing__amount">$7</span>
+        <div class="pricing__meta">
+          <span class="pricing__was">Antes $47 USD</span>
+          <span class="pricing__usd">USD &middot; PAGO &Uacute;NICO</span>
+        </div>
+      </div>
+      <ul class="pricing__list">
+        <li>Gu&iacute;a completa AI Creator System</li>
+        <li>+10 herramientas esenciales explicadas</li>
+        <li>El prompt secreto de im&aacute;genes ultra-realistas</li>
+        <li>Sistema completo: imagen &rarr; video &rarr; voz</li>
+        <li>C&oacute;mo conseguir tr&aacute;fico gratuito y monetizar</li>
+        <li>Acceso al grupo de WhatsApp de la comunidad</li>
+        <li>El prompt de Claude creator (skill completo)</li>
+        <li>Acceso de por vida + actualizaciones incluidas</li>
+      </ul>
+      <a href="#" class="btn" id="checkout-btn">Comprar ahora &mdash; $7 USD &rarr;</a>
+      <p class="pricing__fine">
+        Garant&iacute;a de 7 d&iacute;as sin preguntas &nbsp;&middot;&nbsp; Acceso inmediato al pago<br>
+        Pago seguro procesado por Shopify
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <span class="tag">// preguntas frecuentes</span>
+    <h2 class="heading"><em>FAQ</em></h2>
+    <div class="faq__list">
+      <details class="faq__item">
+        <summary class="faq__q">&iquest;Para qui&eacute;n es esto?</summary>
+        <p class="faq__a">Para cualquiera que quiera crear contenido con IA &mdash; desde cero o con algo de experiencia. No necesitas saber dise&ntilde;ar, ni aparecer en c&aacute;mara. Si puedes seguir un proceso paso a paso, esto funciona.</p>
+      </details>
+      <details class="faq__item">
+        <summary class="faq__q">&iquest;Las herramientas tienen costo?</summary>
+        <p class="faq__a">La mayor&iacute;a tienen planes gratuitos para comenzar. La gu&iacute;a te indica exactamente qu&eacute; usar y cu&aacute;ndo para no gastar de m&aacute;s.</p>
+      </details>
+      <details class="faq__item">
+        <summary class="faq__q">&iquest;Por qu&eacute; $7?</summary>
+        <p class="faq__a">Precio de lanzamiento para los primeros compradores. Despu&eacute;s sube a $47. No hay fecha exacta &mdash; pero cuando cambia, cambia.</p>
+      </details>
+      <details class="faq__item">
+        <summary class="faq__q">&iquest;En qu&eacute; formato est&aacute;?</summary>
+        <p class="faq__a">Gu&iacute;a digital con acceso inmediato. Lo abres en cualquier dispositivo. No hay plataforma de cursos ni videos: es un sistema que usas como referencia mientras creas.</p>
+      </details>
+      <details class="faq__item">
+        <summary class="faq__q">&iquest;Hay garant&iacute;a?</summary>
+        <p class="faq__a">7 d&iacute;as sin preguntas. Si no vale lo que pagaste, te devuelvo el dinero completo. Sin letra chica.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<hr class="split">
+
+<section class="fcta">
+  <div class="wrap">
+    <h2 class="fcta__h">$7 USD.<br><em>Acceso<br>inmediato.</em></h2>
+    <p class="fcta__sub">Despu&eacute;s sube a $47 &mdash; sin fecha exacta.</p>
+    <a href="#comprar" class="btn">Quiero el sistema &rarr;</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer__row">
+      <span class="footer__brand">matupani</span>
+      <span class="footer__copy">&copy; 2025 matupani</span>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky">
+  <div class="sticky__text"><strong>AI Creator System</strong> &mdash; $7 USD</div>
+  <a href="#comprar" class="sticky__btn">Comprar $7 &rarr;</a>
+</div>
+
+{{ content_for_layout }}
+
+<script>
+  const hero = document.querySelector('.hero');
+  const bar = document.getElementById('sticky');
+  new IntersectionObserver(
+    ([e]) => bar.classList.toggle('on', !e.isIntersecting),
+    { threshold: 0 }
+  ).observe(hero);
+</script>
+
+</body>
+</html>
